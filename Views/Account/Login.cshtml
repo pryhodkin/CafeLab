@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+}
+@model CafeLab.ViewModel.LoginViewModel
+
+<h1 style="text-align: center; margin-top: 20px;">Login</h1>
+
+<style>
+    form div {
+        margin-bottom: 10px;
+    }
+
+    form {
+        align-content: center;
+        display: flex;
+        flex-direction: column;
+        width: 20vw;
+        margin: auto;
+    }
+
+    input {
+        margin: auto;
+    }
+</style>
+
+<form method="post" asp-controller="Account" asp-action="Login"
+      asp-route-returnUrl="@Model.ReturnUrl">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="Email" class="control-label"></label><br />
+        <input asp-for="Email" class="form-control"/>
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Password" class="control-label"></label><br />
+        <input asp-for="Password" class="form-control"/>
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="RememberMe" class="control-label"></label><br />
+        <input asp-for="RememberMe" class="form-check" style="margin: inherit;"/>
+    </div>
+    <div style="margin: auto;">
+        <input type="submit" value="Увійти" style="margin: auto" class="btn btn-secondary"/>
+    </div>
+</form>

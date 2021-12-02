@@ -1,0 +1,140 @@
+﻿@model IEnumerable<CafeLab.Models.Dish>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 style="display:block; text-align: center; margin-top: 50px;">Меню</h1>
+<style>
+    .cont {
+        background: #ffffff;
+        box-shadow: 3px 3px 5px 6px #ccc;
+        border-radius: 10px;
+        height: 40vh;
+        resize: horizontal;
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        margin: 15px;
+        font-size: 2vh;
+        transition: all linear 0.3s;
+        vertical-align: central;
+        align-content: center;
+    }
+
+        .cont:hover {
+            background: rgba(148, 188, 204, 0.53);
+            transition: all linear 0.3s;
+            transform: scale(1.05);
+        }
+
+    .card {
+        margin: 10pt;
+        width: 20vw;
+        height: auto;
+    }
+
+
+    button.btn-secondary {
+        background: rgba(248, 245, 240, 0.25);
+        color: #FFFFFF;
+    }
+
+
+    .toggle {
+        position: relative;
+        border-radius: 5px;
+        margin: 5px;
+        overflow: hidden;
+    }
+
+    .toggle-header {
+        margin: 0;
+        color: white;
+        text-align: center;
+        padding: 0;
+    }
+
+    .toggle-height {
+        overflow: hidden;
+        transition: max-height 1s ease;
+        max-height: 0;
+    }
+
+    .toggle:hover .toggle-height {
+        max-height: 1000px;
+        transition: max-height 2s ease;
+    }
+
+    .toggle-transform {
+        padding: 5px;
+        color: white;
+        transition: transform 0s ease-in-out 0s;
+        transform: translateY(-100%);
+    }
+
+    .toggle:hover .toggle-transform {
+        transform: translateY(0);
+        transition: transform 0s ease;
+    }
+
+    .toggle p {
+        opacity: 0;
+    }
+
+    .toggle:hover p {
+        opacity: 1;
+        transition: opacity 0.3s linear;
+    }
+
+    .toggle-header img {
+        width: 100%;
+    }
+</style>
+@if (this.User.IsInRole("admin"))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
+
+<div class="container justify-content-center" style="display: flex; flex-wrap: wrap; align-items: center; height: auto;">
+
+    @foreach (var item in Model)
+    {
+        <div class="toggle card bg-secondary">
+            <div class="toggle-header text-dark card-header">
+                <img src="@item.ImageUrl"><div style="display: flex; justify-content: center; align-items: center; height: 50px;"><span>@Html.DisplayFor(modelItem => item.Name)</span></div>
+            </div>
+            <div class="toggle-height">
+                <div class="toggle-transform bg-secondary text-dark">
+                    <div style="text-align: center;">
+                        Ціна: @Html.DisplayFor(modelItem => item.Price) ₴
+                    </div>
+                    <div style="text-align: center;">
+                        <span>@Html.DisplayTextFor(modelItem => (new { i = item.CategoryId == 4 ? "Місткість:" : "Вага:" }).i) </span>
+                        <span>@Html.DisplayFor(modelItem => item.Weight)</span>
+                        <span>@Html.DisplayTextFor(modelItem => (new { i = item.CategoryId == 4 ? "мл." : "гр." }).i) </span>
+                    </div>
+                    <div style="text-align: center;">
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </div>
+                    <div style="text-align: center;">
+                        Категорія: @Html.DisplayFor(modelItem => item.Category.Name)
+                    </div>
+                    @if (this.User.IsInRole("admin"))
+                    {
+                        <div style="text-align: center;">
+                            <a asp-action="Edit" asp-route-id="@item.DishId">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.DishId">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.DishId">Delete</a>
+                        </div>
+                    }
+                    </div>
+                <div class="card-footer text-center bg-secondary text-dark">
+                    <button type="button" class="btn btn-secondary">Замовити</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>

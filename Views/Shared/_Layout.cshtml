@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CafeLab</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap_state.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap_state.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".dropdown").hover(function () {
+                var dropdownMenu = $(this).children(".dropdown-menu");
+                if (dropdownMenu.is(":visible")) {
+                    dropdownMenu.parent().toggleClass("open");
+                }
+            });
+        });
+    </script>
+    <style>
+        .dropdown:hover .dropdown-menu {
+            transition: opacity linear 0.3s;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .dropdown-menu {
+            transition: opacity linear 0.3s;
+            opacity: 0;
+            visibility: hidden;
+            display: block;
+        }
+
+        .modelitem-block {
+            border-radius: 10px;
+        }
+
+        .nav-link {
+            font-size: larger !important;
+        }
+
+        body {
+            height: auto;
+            background: #bbbbbb;
+        }
+    </style>
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand text-dark" style="font-size: larger !important;" asp-area="" asp-controller="Home" asp-action="Index">CafeLab</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Cafes" asp-action="Index">Мережа</a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-dark dropdown-toggle" asp-area="" asp-controller="Dishes" asp-action="Index" id="dropdownMenu1">
+                                Меню
+                                <span class="caret"></span>
+                            </a>
+                            <div class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                @using (DBCafeContext context = new DBCafeContext())
+                                {
+                                    foreach (var item in context.Categories.ToList())
+                                    {
+                                        <a class="dropdown-item" asp-route-id="@item.CategoryId" asp-controller="Dishes" asp-action="Index">
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                        </a>
+                                    }
+                                }
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Про нас</a>
+                        </li>
+                        @if (this.User.IsInRole("admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="StatsView" asp-action="Index">Статистика</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Користувачі</a>
+                            </li>
+                        }
+                    </ul>
+                    <div style="position: relative; float: right;">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div style="display: flex; flex-direction: row">
+                                <div class="nav-link" style="font-size: 0.15em;">
+                                    @User.Identity.Name
+                                </div>
+
+                                <form style="display: block;" method="post" asp-controller="Account" asp-action="Logout">
+                                    <input class="nav-link text-dark bg-secondary" style="border: 0;" type="submit" value="Вихід" />
+                                </form>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="display: flex; flex-direction: row">
+                                <a class="nav-link text-dark bg-secondary" asp-controller="Account" asp-action="Login">Вхід</a>
+                                <a class="nav-link text-dark bg-secondary" asp-controller="Account" asp-action="Register">Реєстація</a>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+
+
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted text-center">
+        <div class="container text-dark">
+            &copy; 2021 - CafeLab - <a asp-area="" asp-controller="Home" asp-action="Privacy">Про нас</a>
+        </div>
+    </footer>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDptMlK6ji_I3PuBEcq_hFBxZsulauAXA&libraries=places&callback=initMap&v=weekly"
+            async></script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+﻿@model object
+
+@{
+    ViewData["Title"] = "Статистика";
+}
+
+<h1>Статистика</h1>
+<div style="display: flex; justify-items: center;">
+    <div class="card" style="width: 500px; height: 400px; overflow: hidden; border: none; margin: 5px;">
+        <div id="menu"></div>
+    </div>
+    <div class="card" style="width: 500px; height: 400px; overflow: hidden; border: none; margin: 5px;">
+        <div id="cafe"></div>
+    </div>
+</div>
+
+<style>
+    .file-upload input[type="file"] {
+        display: none; /* скрываем input file */
+    }
+
+    /* задаем стили кнопки выбора файла*/
+
+    .file-upload {
+        position: relative;
+        overflow: hidden;
+        width: 250px;
+        height: 40px;
+        background: #4169E1;
+        border-radius: 10px;
+        color: #fff;
+        text-align: center;
+    }
+
+        .file-upload:hover {
+            background: #1E90FF;
+        }
+
+        /* Растягиваем label на всю область блока .file-upload */
+
+        .file-upload label {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        /* стиль текста на кнопке*/
+
+        .file-upload span {
+            line-height: 40px;
+            font-weight: bold;
+        }
+
+        h3{
+            margin-top: 10%;
+        }
+
+    #fileExcel {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+</style>
+<div style="display: flex; justify-items: center;">
+    <div class="card" style="width: 500px; height: 400px; overflow: hidden; border: none; margin: 5px; background-color: #B6B5AF;">
+
+        <h3 class="text-center">Оберіть excel-файл для заватаження</h3>
+        @using (Html.BeginForm("Import", "StatsView", FormMethod.Post, new { enctype = "multipart/form-data", id = "frm-excel" }))
+        {
+            <div style="justify-content: center;">
+
+                <div class="container" style="text-align: center; margin-top: 20%;">
+                    <input class="btn btn-secondary" type="file" name="fileExcel" id="fileExcel"/>
+                    <label class="btn btn-secondary" for="fileExcel" style="margin: auto;">Додати файл
+                    <span id="fff">
+                    </span>
+                    </label>
+                    <input class="btn btn-secondary" type="submit" value="Завантажити" />
+                </div>
+
+            </div>
+        }
+    </div>
+
+
+
+    <div class="card" style="width: 500px; height: 400px; overflow: hidden; border: none; margin: 5px; background-color: #B6B5AF;">
+        <h3 class="text-center">Завантаження інформації в файл</h3>
+        <div class="container" style="text-align: center; margin-top: 20%;">
+            <a class="btn btn-secondary" asp-action="Export">Завантажити</a>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+<script>
+    var inputs = document.getElementById('fileExcel');
+    Array.prototype.forEach.call(inputs, function (input) {
+        var label = input.nextElementSibling,
+            labelVal = label.innerHTML;
+
+        input.addEventListener('change', function (e) {
+            var fileName = '';
+            if (this.files && this.files.length > 1)
+                fileName = (this.getAttribute('data-multiple-caption') || '').replace('{count}', this.files.length);
+            else
+                fileName = e.target.value.split('\\').pop();
+
+            if (fileName)
+                label.getElementById('fff').innerHTML = fileName;
+            else
+                label.innerHTML = labelVal;
+        });
+    });
+</script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawMenuStats);
+
+        function drawMenuStats() {
+
+            $.get('/api/Stats/GetCategoriesData', function (JsonData) {
+                data = google.visualization.arrayToDataTable(JsonData, false);
+                var option = {
+                    title: "Співвідношення кількості страв та категорій",
+                    width: 500,
+                    height: 400,
+                    colors: ["#325d88", "#8e8c84", "#93c54b", "#29abe0", "#f47c3c", "d9534f"],
+                    backgroundColor: "#B6B5AF"
+                };
+                chart = new google.visualization.PieChart(document.getElementById('menu'));
+                chart.draw(data, option);
+            })
+        }
+    </script>
+    <script>
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawCafeStats);
+
+        function drawCafeStats() {
+
+            $.get('/api/Stats/GetCafesData', function (JsonData) {
+                data = google.visualization.arrayToDataTable(JsonData, false);
+                var option = {
+                    title: "Співвідношення кількості кафе та кількості робочих годин",
+                    width: 500,
+                    height: 400,
+                    colors: ["#325d88", "#8e8c84", "#93c54b", "#29abe0", "#f47c3c", "d9534f"],
+                    backgroundColor: "#B6B5AF"
+                };
+                chart = new google.visualization.PieChart(document.getElementById('cafe'));
+                chart.draw(data, option);
+            })
+        }
+    </script>
+}

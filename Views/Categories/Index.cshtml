@@ -1,0 +1,36 @@
+﻿@model IEnumerable<CafeLab.Models.Category>
+
+@{
+    ViewData["Title"] = "Категорії";
+}
+
+<h1>Категорії</h1>
+
+
+<div class="card" style="width: 500px; height: 400px; overflow: hidden; border: none;">
+    <div id="chart"></div>
+</div>
+@section scripts{
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            $.get('/api/Stats/GetCategoriesData', function (JsonData) {
+                data = google.visualization.arrayToDataTable(JsonData, false);
+                var option = {
+                    title: "Співвідношення кількості страв та категорій",
+                    width: 500,
+                    height: 400,
+                    colors: ["#325d88", "#8e8c84", "#93c54b", "#29abe0", "#f47c3c", "d9534f"],
+                    backgroundColor: "#B6B5AF"
+                };
+                chart = new google.visualization.PieChart(document.getElementById('chart'));
+                chart.draw(data, option);
+            })
+        }
+    </script>
+}
+

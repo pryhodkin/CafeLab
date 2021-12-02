@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewData["Title"] = "Register";
+}
+
+@model CafeLab.ViewModel.RegisterViewModel
+<h2 style="text-align: center; margin-top: 20px;">Реєстрація нового користувача</h2>
+<style>
+    form div{
+        margin-bottom: 10px;
+    }
+    form{
+        align-content:center;
+        display: flex;
+        flex-direction: column;
+        width: 20vw;
+        margin: auto;
+    }
+    input{
+        margin: auto;
+    }
+</style>
+<form method="post" asp-controller="Account" asp-action="Register">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="Email" class="control-label"></label><br />
+        <input asp-for="Email" class="form-control"/>
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Name" class="control-label"></label><br />
+        <input asp-for="Name" class="form-control"/>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Surname" class="control-label"></label><br />
+        <input asp-for="Surname" class="form-control"/>
+        <span asp-validation-for="Surname" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="DefaultAddress" class="control-label"></label><br />
+        <input asp-for="DefaultAddress" class="form-control"/>
+        <span asp-validation-for="DefaultAddress" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Password" class="control-label"></label><br />
+        <input asp-for="Password" class="form-control"/>
+        <span asp-validation-for="Password"></span>
+    </div>
+    <div>
+        <label asp-for="PasswordConfirm" class="control-label"></label><br/>
+        <input asp-for="PasswordConfirm"class="form-control"/>
+        <span asp-validation-for="PasswordConfirm"></span>
+    </div>
+    <div style="margin: auto;">
+        <input type="submit" value="Реєстрація" style="margin: auto" class="btn btn-secondary"/>
+    </div>
+</form>
+

@@ -1,0 +1,30 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:55912",
+      "sslPort": 44325
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "DATABASE_URL": "postgres://mxqudtcjbwgylr:a2ca1cf44451643d7406f3c4170a1e67c6cd5641fe2392da29b43a6f5b6317de@ec2-54-195-76-73.eu-west-1.compute.amazonaws.com:5432/d7ju1g868320jq",
+        "HEROKU_POSTGRESQL_GRAY_URL": "postgres://mrklpjthvjjgfc:5ad58f9ab402a02de0e05c58f8b75e0e3c12e90fe76c25aaaa9a675a155b7627@ec2-52-19-96-181.eu-west-1.compute.amazonaws.com:5432/d2ft41p1mub79v",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "CafeLab": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": "true",
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+    }
+  }
+}

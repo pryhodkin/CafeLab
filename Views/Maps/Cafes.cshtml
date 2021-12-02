@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "Cafes";
+}
+
+
+<div class="card" style="width: 1000px; height: 800px; overflow: hidden; border: none; margin: 5px;">
+    <div id="map" style="position: absolute; height: 100%; width: 100%">
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        function initMap() {
+
+            const kyiv = { lat: 50.45, lng: 30.52 };
+
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 13,
+                center: kyiv
+            });
+
+            var cafes = [];
+            $.get(
+                "/api/cafes",
+                {},
+                function (data) {
+                    console.log(data);
+                    data.forEach( function(cafe) {
+                        console.log(typeof (cafe.Address))
+                        var request = {
+                            query: cafe.address,
+                            fields: ['name', 'geometry'],
+                        };
+                        console.log(cafe.address)
+
+
+                        var service = new google.maps.places.PlacesService(map);
+                        var markers = [];
+
+                        service.findPlaceFromQuery(request, function (results, status) {
+                            if (status === google.maps.places.PlacesServiceStatus.OK) {
+
+                                marker = new google.maps.Marker({
+                                    position: results[0].geometry.location,
+                                    title: results[0].name,
+                                });
+                                marker.setMap(map);
+                                markers.push(marker)
+                            }
+                            map.setCenter(results[0].geometry.location);
+                        })
+                    })
+                }
+            );
+
+            console.log(cafes)
+        }
+    </script>
+}
